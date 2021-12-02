@@ -8,7 +8,7 @@ import (
 func main() {
 	inputs := utils.ParseInputAsInt()
 	fmt.Println("Result day 1 part 1: ", Part1(inputs))
-	fmt.Println("Result day 2 part 2: ", Part2(inputs))
+	fmt.Println("Result day 1 part 2: ", Part2(inputs))
 }
 
 func Part1(inputs []int) int {

@@ -26,6 +26,13 @@ func ParseInputAsInt() (result []int) {
 	return result
 }
 
+func ParseInputAsString() []string {
+	data := ReadFile()
+	fileContent := string(bytes.TrimSpace(data))
+
+	return strings.Split(fileContent, "\n")
+}
+
 func ReadFile() []byte {
 	dir, err := os.Getwd()
 
