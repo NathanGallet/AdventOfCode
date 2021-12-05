@@ -33,6 +33,24 @@ func ParseInputAsString() []string {
 	return strings.Split(fileContent, "\n")
 }
 
+func ParseInputAsBinary() (result []int) {
+	data := ReadFile()
+	fileContent := string(bytes.TrimSpace(data))
+	lines := strings.Split(fileContent, "\n")
+
+	for _, line := range lines {
+		i, err := strconv.ParseInt(line, 2, 0)
+		if err != nil {
+			panic(fmt.Sprintf("Can't convert string %s to int %s", line, err.Error()))
+		}
+
+		result = append(result, int(i))
+	}
+
+	return result
+
+}
+
 func ReadFile() []byte {
 	dir, err := os.Getwd()
 
