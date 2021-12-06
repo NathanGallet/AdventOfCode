@@ -52,7 +52,6 @@ func Part2(inputs []string) int {
 	matrice := generateMatrix(maxX+1, maxY+1)
 	matrice = populateMatrice(matrice, coords)
 
-	printMatrice(matrice)
 	return countLinesCover(matrice)
 }
 
