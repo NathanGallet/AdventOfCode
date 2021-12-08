@@ -72,3 +72,26 @@ func ReadFile() []byte {
 
 	return data
 }
+
+func ContainsString(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func EqualsStringsSlice(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+
+	for _, value := range a {
+		if !ContainsString(b, value) {
+			return false
+		}
+	}
+
+	return true
+}
