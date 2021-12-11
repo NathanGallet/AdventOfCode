@@ -95,3 +95,16 @@ func EqualsStringsSlice(a, b []string) bool {
 
 	return true
 }
+
+func ReverseIntSlice(input []int) []int {
+	inputLen := len(input)
+	output := make([]int, inputLen)
+
+	for i, n := range input {
+		j := inputLen - i - 1
+
+		output[j] = n
+	}
+
+	return output
+}
