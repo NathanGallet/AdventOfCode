@@ -13,11 +13,10 @@ defmodule Day01 do
 
   def parse_input(input) do
     input
-    |> String.split("\n")
-    |> Enum.chunk_by(&(&1 == ""))
-    |> Enum.reject(&(&1 == [""]))
+    |> String.split("\n\n")
     |> Enum.map(fn elf_calories ->
       elf_calories
+      |> String.split("\n", trim: true)
       |> Enum.map(&String.to_integer/1)
       |> Enum.sum()
     end)

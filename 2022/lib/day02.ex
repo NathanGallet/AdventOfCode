@@ -7,7 +7,7 @@ defmodule Day02 do
     "C" => 3
   }
 
-  @victories %{
+  @winning_combinaison %{
     "A" => "C",
     "B" => "A",
     "C" => "B"
@@ -29,8 +29,7 @@ defmodule Day02 do
     input
     |> Enum.map(fn current_round ->
       [opponent_choice, my_choice] = String.split(current_round, " ")
-      my_choice = convert_my_moves(my_choice)
-      find_winner(opponent_choice, my_choice)
+      calculate_result(opponent_choice, convert_my_moves(my_choice))
     end)
     |> Enum.sum()
   end
@@ -44,31 +43,28 @@ defmodule Day02 do
     |> Enum.sum()
   end
 
-  defp convert_my_moves(my_choice) do
-    <<ascii_value>> = my_choice
-    List.to_string([ascii_value - 23])
-  end
+  defp convert_my_moves(<<ascii_value>>), do: List.to_string([ascii_value - 23])
 
   # Need to lose
   defp strategy("X", opponent_choice),
-    do: find_winner(opponent_choice, @victories[opponent_choice])
+    do: calculate_result(opponent_choice, @winning_combinaison[opponent_choice])
 
   # Need a draw
-  defp strategy("Y", opponent_choice), do: find_winner(opponent_choice, opponent_choice)
+  defp strategy("Y", opponent_choice), do: calculate_result(opponent_choice, opponent_choice)
 
   # Need a win
   defp strategy("Z", opponent_choice) do
-    @victories
+    @winning_combinaison
     |> Enum.find(fn {_choice, win_against} -> win_against == opponent_choice end)
     |> elem(0)
-    |> (&find_winner(opponent_choice, &1)).()
+    |> (&calculate_result(opponent_choice, &1)).()
   end
 
-  defp find_winner(opponent_choice, my_choice) when opponent_choice == my_choice,
+  defp calculate_result(opponent_choice, my_choice) when opponent_choice == my_choice,
     do: @score[my_choice] + 3
 
-  defp find_winner(opponent_choice, my_choice) do
-    case @victories[my_choice] == opponent_choice do
+  defp calculate_result(opponent_choice, my_choice) do
+    case @winning_combinaison[my_choice] == opponent_choice do
       true -> @score[my_choice] + 6
       false -> @score[my_choice]
     end
