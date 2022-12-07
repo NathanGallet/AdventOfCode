@@ -36,7 +36,7 @@ defmodule Day07 do
     |> elem(0)
   end
 
-  defp move("..", tree, [_head | tail]), do: {tree, tail}
+  defp move("..", tree, [_head | path]), do: {tree, path}
 
   defp move(directory, _tree, []), do: {%{"/" => %{}}, [directory]}
 
@@ -63,15 +63,21 @@ defmodule Day07 do
 
   def part1(input) do
     input["/"]
-    |> find_small_values([])
+    |> find_all_directory_size([])
     |> elem(1)
+    |> Enum.reduce([], fn value, result ->
+      case value < 100_000 do
+        true -> [value | result]
+        false -> result
+      end
+    end)
     |> Enum.sum()
   end
 
   def part2(input) do
     [disk_used | disk] =
       input["/"]
-      |> find_all_values([])
+      |> find_all_directory_size([])
       |> elem(1)
       |> Enum.sort(:desc)
 
@@ -84,7 +90,7 @@ defmodule Day07 do
     end)
   end
 
-  defp find_small_values(tree, result) do
+  defp find_all_directory_size(tree, result) do
     initial_size =
       case tree["values"] == nil do
         true -> 0
@@ -95,28 +101,7 @@ defmodule Day07 do
       tree
       |> Map.delete("values")
       |> Enum.reduce({initial_size, result}, fn {_name, child}, {directory_size, result} ->
-        {children_size, result} = find_small_values(child, result)
-        {directory_size + children_size, result}
-      end)
-
-    case directory_size < 100_000 do
-      true -> {directory_size, [directory_size | result]}
-      false -> {directory_size, result}
-    end
-  end
-
-  defp find_all_values(tree, result) do
-    initial_size =
-      case tree["values"] == nil do
-        true -> 0
-        false -> Enum.sum(tree["values"])
-      end
-
-    {directory_size, result} =
-      tree
-      |> Map.delete("values")
-      |> Enum.reduce({initial_size, result}, fn {_name, child}, {directory_size, result} ->
-        {children_size, result} = find_all_values(child, result)
+        {children_size, result} = find_all_directory_size(child, result)
         {directory_size + children_size, result}
       end)
 
