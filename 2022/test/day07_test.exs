@@ -30,7 +30,7 @@ defmodule Day07Test do
       """
       |> Day07.parse_input()
 
-    # assert Day07.part1(input) == 95437
+    assert Day07.part1(input) == 95437
     assert Day07.part2(input) == 24_933_642
   end
 end
