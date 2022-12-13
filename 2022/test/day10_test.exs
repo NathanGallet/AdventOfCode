@@ -1,18 +1,6 @@
 defmodule Day10Test do
   use ExUnit.Case
 
-  test "simple example" do
-    input =
-      """
-      noop
-      addx 3
-      addx -5
-      """
-      |> Day10.parse_input()
-
-    assert Day10.part1(input) == -1
-  end
-
   test "day10 " do
     input =
       """
@@ -166,6 +154,7 @@ defmodule Day10Test do
       |> Day10.parse_input()
 
     assert Day10.part1(input) == 13140
+    IO.puts("\n")
     IO.inspect(Day10.part2(input))
   end
 end
