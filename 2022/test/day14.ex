@@ -114,21 +114,20 @@ defmodule Day14 do
       not is_nil(ground) ->
         {min, max} = find_min_max(map)
 
-        map =
-          0..ground
-          |> Enum.to_list()
-          |> Enum.reduce(map, fn row, map ->
-            blocker =
-              case row == ground do
-                true -> :rock
-                false -> :empty
-              end
+        0..ground
+        |> Enum.to_list()
+        |> Enum.reduce(map, fn row, map ->
+          blocker =
+            case row == ground do
+              true -> :rock
+              false -> :empty
+            end
 
-            map
-            |> Map.put({row, min - 1}, blocker)
-            |> Map.put({row, max + 1}, blocker)
-          end)
-          |> fall(@sand, ground)
+          map
+          |> Map.put({row, min - 1}, blocker)
+          |> Map.put({row, max + 1}, blocker)
+        end)
+        |> fall(@sand, ground)
 
       true ->
         fall(map, :into_the_abyss, ground)
@@ -186,35 +185,5 @@ defmodule Day14 do
     |> Map.keys()
     |> Enum.map(fn {_row, col} -> col end)
     |> Enum.min_max()
-  end
-
-  defp print(map) do
-    map
-    |> Enum.reduce(%{}, fn {{row, col}, value}, acc ->
-      case is_nil(acc[row]) do
-        true -> Map.put(acc, row, [{col, value}])
-        false -> %{acc | row => [{col, value} | acc[row]]}
-      end
-    end)
-    |> Enum.map(fn {_row, col} ->
-      col
-      |> Enum.sort_by(fn {col_number, _} -> col_number end)
-      |> Enum.map(fn {_, value} ->
-        case value do
-          :empty -> "."
-          :rock -> "#"
-          :sand -> "o"
-          value -> value
-        end
-      end)
-      |> Enum.join("")
-    end)
-    |> Enum.each(fn line ->
-      IO.inspect(line)
-    end)
-
-    IO.puts("\n")
-
-    map
   end
 end
