@@ -1,5 +1,4 @@
 import re
-import sys
 
 def value(input):
     almanac = {}
@@ -26,49 +25,45 @@ def convert(value, mappings):
 def convert_range(ranges, mappings):
     results = []
 
-    for value in ranges:
-
-        value_range = range(value[0], value[0] + value[1])
-        result = value
+    while(len(ranges) > 0):
+        value = ranges.pop()
+        result = None
 
         for mapping in mappings:
             destination, source, length = mapping
-
             source_range = range(source, source + length)
-            intersec = range(max(value_range.start,source_range.start), min(value_range.stop,source_range.stop)) or None
+            intersec = range(max(value.start, source_range.start), min(value.stop, source_range.stop)) or None
 
             if intersec is not None:
                 shift = destination - source
-                if intersec == value_range:
-                    result = (value_range.start + shift, value_range.stop - value_range.start + shift)
+                if intersec == value:
+                    result = [range(value.start + shift, value.stop + shift)]
                     break
-                elif value_range.start == intersec.start:
-                    result = [(value_range.start + shift, intersec.stop - intersec.start + shift), (intersec.stop + 1, value_range.stop - intersec.stop + 1 )]
+                elif value.start == intersec.start:
+                    result = [range(value.start + shift, intersec.stop + shift)]
+                    ranges += [range(intersec.stop, value.stop)]
                     break
-                elif value_range.stop == intersec.stop:
-                    result = [(value_range.start, intersec.start - 1 - value_range.start), (intersec.start, intersec.stop - intersec.start )]
+                elif value.stop == intersec.stop:
+                    result = [range(intersec.start + shift, intersec.stop + shift)]
+                    ranges += [range(value.start, intersec.start)]
                     break
-                else :
-                    print('')
-                    print('value_range', value_range)
-                    print('source_range', source_range)
-                    print('intersec', intersec)
-                    print('shift', shift)
-                    print('')
+                else:
+                    result = [range(intersec.start + shift, intersec.stop + shift)]
+                    ranges += [range(value.start, intersec.start), range(intersec.stop, value.stop)]
+                    break
 
-        if type(result) is list:
-            results = results + result
+        if result is None:
+            results += [value]
         else:
-            results.append(result)
+            results += result
 
-    print('list(set(result))', results)
     return results
-
 
 def part1(almanac):
     result = []
     for seed in almanac['seeds']:
         soil = convert(seed, almanac['seed_to_soil'])
+
         fertilizer = convert(soil, almanac['soil_to_fertilizer'])
         water = convert(fertilizer, almanac['fertilizer_to_water'])
         light = convert(water, almanac['water_to_light'])
@@ -82,36 +77,26 @@ def part1(almanac):
 
 def part2(almanac):
     result = []
-    seeds = [almanac['seeds'][i:i + 2] for i in range(0, len(almanac['seeds']), 2)]
+    seeds = []
+    for i in range(0, len(almanac['seeds']), 2):
+        start, size = almanac['seeds'][i:i + 2]
+        seeds.append(range(start, start + size))
 
-    print('\n======soil\n')
     soil = convert_range(seeds, almanac['seed_to_soil'])
-    print('\n======fertilizer\n')
+
     fertilizer = convert_range(soil, almanac['soil_to_fertilizer'])
-    print('\n======water\n')
     water = convert_range(fertilizer, almanac['fertilizer_to_water'])
-    print('\n======light\n')
     light = convert_range(water, almanac['water_to_light'])
-    print('\n======temperature\n')
     temperature = convert_range(light, almanac['light_to_temperature'])
-    print('\n======humidity\n')
     humidity = convert_range(temperature, almanac['temperature_to_humidity'])
-    print('\n======location\n')
     location = convert_range(humidity, almanac['humidity_to_location'])
 
-    print('location', location)
-
-
-    my_min = sys.maxsize
-    for l in location:
-        if l[0] < my_min:
-            my_min = l[0]
-
-    result.append(my_min)
-
-    return min(soil)
+    return min([loc.start for loc in location])
 
 almanac = value(open('./2023/day05/input.txt').read())
 
-# print(part1(almanac))
+print(part1(almanac))
 print(part2(almanac))
+
+#551761867
+#57451709
