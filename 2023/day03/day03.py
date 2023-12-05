@@ -11,28 +11,6 @@ def add_value_buffer(buffer, character, row, col):
 
     return result
 
-def around_symbol(coord, symbols, max_row, max_col):
-    row, col = coord
-    if row + 1 < max_row and (row + 1, col) in symbols:
-        return True
-    if row > 0 and (row - 1, col) in symbols:
-        return True
-    if col + 1 < max_col and (row, col + 1) in symbols:
-        return True
-    if col > 0 and (row, col - 1) in symbols:
-        return True
-    if row + 1 < max_row and col + 1 < max_col and (row + 1, col + 1) in symbols:
-        return True
-    if row + 1 < max_row and col > 0 and (row + 1, col - 1) in symbols:
-        return True
-    if row > 0 and col + 1 < max_col and (row - 1, col + 1) in symbols:
-        return True
-    if row > 0 and col > 0 and (row - 1, col - 1) in symbols:
-        return True
-
-    return False
-
-
 def value(input):
     symbols = []
     gears = []
@@ -64,6 +42,27 @@ def value(input):
 
     return (points, engine, symbols, gears)
 
+def around_symbol(coord, symbols, max_row, max_col):
+    row, col = coord
+    if row + 1 < max_row and (row + 1, col) in symbols:
+        return True
+    if row > 0 and (row - 1, col) in symbols:
+        return True
+    if col + 1 < max_col and (row, col + 1) in symbols:
+        return True
+    if col > 0 and (row, col - 1) in symbols:
+        return True
+    if row + 1 < max_row and col + 1 < max_col and (row + 1, col + 1) in symbols:
+        return True
+    if row + 1 < max_row and col > 0 and (row + 1, col - 1) in symbols:
+        return True
+    if row > 0 and col + 1 < max_col and (row - 1, col + 1) in symbols:
+        return True
+    if row > 0 and col > 0 and (row - 1, col - 1) in symbols:
+        return True
+
+    return False
+
 def part1(engine, points, symbols):
     result = 0
     for coords, number in points.items():
@@ -72,7 +71,6 @@ def part1(engine, points, symbols):
 
         if type(coords[0]) is int and around_symbol(coords, symbols, len(engine), len(engine[0])):
             result += number
-
 
     return result
 
@@ -87,8 +85,9 @@ def part2(engine, points, gears):
             if type(coords[0]) is int and around_symbol(coords, [gear], len(engine), len(engine[0])):
                 numbers.append(number)
 
-        if len(numbers) == 2:
-            result += numbers[0] * numbers[1]
+            if len(numbers) == 2:
+                result += numbers[0] * numbers[1]
+                break
 
     return result
 
