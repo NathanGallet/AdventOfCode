@@ -22,6 +22,24 @@ def convert(value, mappings):
 
     return value
 
+
+def part2(almanac):
+    result = []
+    seeds = []
+    for i in range(0, len(almanac['seeds']), 2):
+        start, size = almanac['seeds'][i:i + 2]
+        seeds.append(range(start, start + size))
+
+    soil = convert_range(seeds, almanac['seed_to_soil'])
+    fertilizer = convert_range(soil, almanac['soil_to_fertilizer'])
+    water = convert_range(fertilizer, almanac['fertilizer_to_water'])
+    light = convert_range(water, almanac['water_to_light'])
+    temperature = convert_range(light, almanac['light_to_temperature'])
+    humidity = convert_range(temperature, almanac['temperature_to_humidity'])
+    location = convert_range(humidity, almanac['humidity_to_location'])
+
+    return min([loc.start for loc in location])
+
 def convert_range(ranges, mappings):
     results = []
 
@@ -63,7 +81,6 @@ def part1(almanac):
     result = []
     for seed in almanac['seeds']:
         soil = convert(seed, almanac['seed_to_soil'])
-
         fertilizer = convert(soil, almanac['soil_to_fertilizer'])
         water = convert(fertilizer, almanac['fertilizer_to_water'])
         light = convert(water, almanac['water_to_light'])
@@ -75,28 +92,7 @@ def part1(almanac):
 
     return min(result)
 
-def part2(almanac):
-    result = []
-    seeds = []
-    for i in range(0, len(almanac['seeds']), 2):
-        start, size = almanac['seeds'][i:i + 2]
-        seeds.append(range(start, start + size))
-
-    soil = convert_range(seeds, almanac['seed_to_soil'])
-
-    fertilizer = convert_range(soil, almanac['soil_to_fertilizer'])
-    water = convert_range(fertilizer, almanac['fertilizer_to_water'])
-    light = convert_range(water, almanac['water_to_light'])
-    temperature = convert_range(light, almanac['light_to_temperature'])
-    humidity = convert_range(temperature, almanac['temperature_to_humidity'])
-    location = convert_range(humidity, almanac['humidity_to_location'])
-
-    return min([loc.start for loc in location])
-
 almanac = value(open('./2023/day05/input.txt').read())
 
 print(part1(almanac))
 print(part2(almanac))
-
-#551761867
-#57451709
